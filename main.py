@@ -30,7 +30,7 @@ class Livro:
 @app.route('/')
 def index():
     cursor = con.cursor()
-    cursor.execute("SELECT ID_LIVRO, TITULO, AUTOR, ANO_PUBLICACAO FROM livros")
+    cursor.execute("SELECT ID_LIVRO, TITULO, AUTOR, ANO_PUBLICACAO FROM livros order by 1")
     livros = [Livro(*row) for row in cursor.fetchall()]
     cursor.close()
     return render_template('livros.html', livros=livros)
@@ -60,6 +60,15 @@ def criar():
         cursor.close()
         # Retornar uma mensagem de erro ou redirecionar para uma página de erro
         flash("Erro: Livro já cadastrado.", "error")
+        return redirect(url_for('novo'))
+    if titulo == '':
+        flash("Erro: O campo título não pode ser vazio.", "error")
+        return redirect(url_for('novo'))
+    if autor == '':
+        flash("Erro: O campo autor não pode ser vazio.", "error")
+        return redirect(url_for('novo'))
+    if ano_publicacao == '':
+        flash("Erro: O ano de publicação não pode ser vazio.", "error")
         return redirect(url_for('novo'))
 
     # Inserir o novo livro
